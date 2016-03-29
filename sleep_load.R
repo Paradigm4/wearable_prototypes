@@ -105,7 +105,7 @@ load_file = function(path, id)
   #re-number every subject relative to their first day
   
   #Find the zeroth day.
-  day_zero = min(loaded_temp$original_day)
+  day_zero = aggregate(loaded_temp$original_day, FUN="min(original_day) as min")[]$min #min(loaded_temp$original_day)
   
   #Insert accelerometer and sleep data into IHI_ACCELEROMETER
   iquery(sprintf(

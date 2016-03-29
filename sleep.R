@@ -17,6 +17,31 @@ library('scidb')
 library('ggplot2')
 library('gridExtra')
 
+source('/home/scidb/R_scripts/ami_functions.R')
+
+demo=function()
+{
+  a = scidb("IHI_ACCELEROMETER")
+  str(a)
+  
+  head(a, n=10)
+  plot_data(subject=2, day = 6, hour=07, min=30,zoom=60)
+  plot_data(subject=2, day = 6, hour=07, min=30,zoom=3600)
+  plot_data(subject=2, day = 6, hour=07, min=30,zoom=86400)
+  plot_data(subject=1, day = 3, hour=07, min=30,zoom=3600)
+
+  #Regridding. Note the data are sampled at different frequencies:
+  plot_data(subject=2, day = 6, hour=07, min=34, zoom=30, light=TRUE)
+  #Applying a 1-second regrid to the accelerometer data (top) makes the graphs join-able
+  plot_data(subject=2, day = 6, hour=07, min=34, zoom=30, light=TRUE, grid_interval=1000)
+      
+  #Activity scores
+  plot_data(subject=2, day = 6, hour=07, min=30, zoom=7200, activity=TRUE)
+
+  #Thresholded Sleep prediction 
+  plot_data(subject=2, day = 6, hour=07, min=30, zoom=86400, activity=TRUE, light=TRUE, sleep_actual=TRUE, prediction=TRUE)
+}
+
 #To run this, build and load the attached libwindowed_activity.so example UDO
 #This is also possible with SciDB built-in window aggregates but not nearly as fast.
 compute_activity_score = function(window_preceding = 300000, window_following= 300000)
@@ -126,14 +151,15 @@ plot_data = function(subject=2, day = 6, hour=07, min=34,
   if(t1-t0 <= 120000)
   {
     plot_fun = geom_point
+    stroke_size = 2.5
   }
   if(missing(grid_interval))
   {
-    if(t1-t0 <= 3600000)
+    if(t1-t0 < 3600000)
     {
       grid_interval = 1
     }
-    else if(t1-t0 <= 3600000 * 4)
+    else if(t1-t0 < 3600000 * 4)
     {
       grid_interval = 1000
     }
@@ -158,7 +184,7 @@ plot_data = function(subject=2, day = 6, hour=07, min=34,
     start_time=proc.time()
     #download = iqdf(query, n=Inf)
     download = iquery(query, return=TRUE)
-    print(proc.time()-start_time)
+    #print(proc.time()-start_time)
     download$seconds = download$mil * grid_interval / 1000
     acc_plot = ggplot(download, aes(x=seconds)) + 
       plot_fun(aes(y=acc_x, colour="acc_x"), size = stroke_size) + 
@@ -209,6 +235,7 @@ plot_data = function(subject=2, day = 6, hour=07, min=34,
     }
     query = sprintf("project(%s, sleep)", query)
     download = iqdf(query, n=Inf)
+    print(download)
     download$seconds = download$mil * grid_interval / 1000
     sleep_plot = ggplot(download, aes(x=seconds, y=sleep)) + plot_fun(size = stroke_size) + theme(text = element_text(size=text_size))
     plots[[n]] = sleep_plot
