@@ -1,6 +1,6 @@
 # Storing and analyzing wearable timeseries.
 This was inspired by the cool dataset and paper from here: http://www.ess.tu-darmstadt.de/datasets/ihi_2012
-This is very much an "archive" repo. The schemas for wearable data are close to what we use now. However, most of the techniques we use at P4 wearables nowadays are far ahead of this. 
+This is very much an "archive" repo. The schemas are close to what we use now but most of the query and analysis techniques we use for wearables nowadays are far ahead of this. 
 
 ### Load and see
 `sleep_load.R` and `sleep.R` have some rough scripts for loading this data and visualizing it. We intentionally load the light data at a lower frequency and then demonstrate how regrid can be used to combine datasets sampled at different rates. 
