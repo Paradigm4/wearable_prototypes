@@ -16,12 +16,9 @@ will compute a 10-minute moving window (5 minutes preceding and following). The 
 <x:uint8 null, y:uint8 null, z:uint8 null>
 [subject = 0:*,1,0, day=0:*,1,0, millis=0:86399999,86400000,0]
 ```
-For the 10-minute window surrounding each cell, it computes the sum of 3D euclidean distances between each pair of successive points `{t(i+1),t(i)}`, divided by the total time elapsed. Thus it outputs roughly the "total amount of motion" performed. This can also be computed using regular window aggregates, but this special-case UDO will run faster. The returned array has as many cells as the input array, with the schema:
-```
-<activity:double null>
-[subject = 0:*,1,0, day=0:*,1,0, millis=0:86399999,86400000,0]
-```
-In the future this can be extended to take advantage of overlaps as well.
+For the 10-minute window surrounding each cell, it computes the sum of 3D euclidean distances between each pair of successive points `{t(i+1),t(i)}`, divided by the total time elapsed. Thus it outputs roughly the "total amount of motion" performed. 
+
+Note - this predated SciDB Streaming. These days, using Streaming with a fourier transform and power spectrum would be far superior!
 
 ### Generate fake data
 
