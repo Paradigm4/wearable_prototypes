@@ -1,5 +1,6 @@
 # Storing and analyzing wearable timeseries.
 This was inspired by the cool dataset and paper from here: http://www.ess.tu-darmstadt.de/datasets/ihi_2012
+This is very much an "archive" repo. The schemas for wearable data are close to what we use now. However, most of the techniques we use at P4 wearables nowadays are far ahead of this. 
 
 ### Load and see
 `sleep_load.R` and `sleep.R` have some rough scripts for loading this data and visualizing it. We intentionally load the light data at a lower frequency and then demonstrate how regrid can be used to combine datasets sampled at different rates. 
@@ -18,7 +19,7 @@ will compute a 10-minute moving window (5 minutes preceding and following). The 
 ```
 For the 10-minute window surrounding each cell, it computes the sum of 3D euclidean distances between each pair of successive points `{t(i+1),t(i)}`, divided by the total time elapsed. Thus it outputs roughly the "total amount of motion" performed. 
 
-Note - this predated SciDB Streaming. These days, using Streaming with a fourier transform and power spectrum would be far superior!
+This predated SciDB Streaming. These days, using Streaming with a fourier transform and power spectrum would be far superior!
 
 ### Generate fake data
 
